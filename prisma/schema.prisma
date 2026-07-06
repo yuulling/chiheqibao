@@ -1,0 +1,60 @@
+// ╔══════════════════════════════════════════╗
+// ║ 部署到 Vercel 使用 Neon PostgreSQL       ║
+// ║ 本地开发如需 SQLite：provider 改为       ║
+// ║ "sqlite"，url 改为 "file:./dev.db"       ║
+// ╚══════════════════════════════════════════╝
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  sortOrder   Int       @default(0)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  specs       String    @default("[]")
+  price       Float?
+  unit        String    @default("台")
+  coverImage  String?
+  images      String    @default("[]")
+  featured    Boolean   @default(false)
+  published   Boolean   @default(true)
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
