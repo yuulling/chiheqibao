@@ -1,27 +1,17 @@
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
-
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
+import { put } from "@vercel/blob";
 
 export async function saveFile(file: File): Promise<string> {
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-
-  // Generate unique filename
   const timestamp = Date.now();
   const randomStr = Math.random().toString(36).substring(2, 8);
-  const ext = path.extname(file.name) || ".jpg";
-  const filename = `${timestamp}-${randomStr}${ext}`;
+  const ext = file.name.includes(".") ? file.name.split(".").pop() || "jpg" : "jpg";
+  const filename = `products/${timestamp}-${randomStr}.${ext}`;
 
-  // Ensure upload directory exists
-  await mkdir(UPLOAD_DIR, { recursive: true });
+  const blob = await put(filename, file, {
+    access: "public",
+    addRandomSuffix: false,
+  });
 
-  // Write file
-  const filePath = path.join(UPLOAD_DIR, filename);
-  await writeFile(filePath, buffer);
-
-  // Return public URL
-  return `/uploads/${filename}`;
+  return blob.url;
 }
 
 export const ALLOWED_TYPES = [
