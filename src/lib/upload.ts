@@ -9,6 +9,7 @@ export async function saveFile(file: File): Promise<string> {
   const blob = await put(filename, file, {
     access: "public",
     addRandomSuffix: false,
+    ...(process.env.BLOB_STORE_ID ? { storeId: process.env.BLOB_STORE_ID } : {}),
   });
 
   return blob.url;
