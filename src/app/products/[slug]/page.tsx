@@ -109,18 +109,6 @@ export default function ProductDetailPage() {
               <p className="text-gray-600 leading-relaxed whitespace-pre-line">{product.description}</p>
             </div>
           )}
-
-          {/* Contact CTA */}
-          <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-            <h3 className="font-semibold text-gray-900 mb-2">对该产品感兴趣？</h3>
-            <p className="text-sm text-gray-500 mb-4">欢迎联系我们了解更多产品详情和价格信息</p>
-            <Link href="/contact" className="btn-primary inline-flex items-center text-sm">
-              联系我们
-              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-          </div>
         </div>
       </div>
 
