@@ -30,7 +30,6 @@ export function Footer() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/products" className="hover:text-white transition-colors">产品中心</Link></li>
               <li><Link href="/about" className="hover:text-white transition-colors">关于我们</Link></li>
-              <li><Link href="/contact" className="hover:text-white transition-colors">联系我们</Link></li>
             </ul>
           </div>
 

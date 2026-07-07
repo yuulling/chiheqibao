@@ -7,7 +7,6 @@ const navLinks = [
   { href: "/", label: "首页" },
   { href: "/products", label: "产品中心" },
   { href: "/about", label: "关于我们" },
-  { href: "/contact", label: "联系我们" },
 ];
 
 export function Header() {
