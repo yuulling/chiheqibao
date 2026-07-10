@@ -1,8 +1,13 @@
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { jsonResponse, errorResponse, slugify } from "@/lib/utils";
 import { categorySchema } from "@/lib/validation";
+
+const categoryDeleteSchema = z.object({
+  ids: z.array(z.string()).min(1, "至少选择一个分类"),
+});
 
 // GET /api/categories - Public
 export async function GET() {
@@ -55,5 +60,41 @@ export async function POST(request: NextRequest) {
     return jsonResponse(category, 201);
   } catch {
     return errorResponse("创建分类失败", 500);
+  }
+}
+
+// PATCH /api/categories - Protected batch delete
+export async function PATCH(request: NextRequest) {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return errorResponse("未登录", 401);
+    }
+
+    const body = await request.json();
+    const parsed = categoryDeleteSchema.safeParse(body);
+    if (!parsed.success) {
+      return errorResponse(parsed.error.errors[0]?.message || "数据校验失败", 400);
+    }
+    const { ids } = parsed.data;
+
+    // Check which categories have products (can't delete those)
+    const categoriesWithProducts = await prisma.category.findMany({
+      where: { id: { in: ids } },
+      include: { _count: { select: { products: true } } },
+    });
+
+    const blocked = categoriesWithProducts.filter((c) => c._count.products > 0);
+    if (blocked.length > 0) {
+      return errorResponse(
+        `以下分类还有产品，无法删除：${blocked.map((c) => c.name).join("、")}`,
+        400
+      );
+    }
+
+    await prisma.category.deleteMany({ where: { id: { in: ids } } });
+    return jsonResponse({ success: true, count: ids.length });
+  } catch {
+    return errorResponse("批量操作失败", 500);
   }
 }
