@@ -32,7 +32,8 @@ export async function POST(request: NextRequest) {
     const url = await saveFile(file);
     return jsonResponse({ url });
   } catch (error) {
-    console.error("Upload error:", error);
-    return errorResponse("上传失败", 500);
+    const message = error instanceof Error ? error.message : "上传失败";
+    console.error("Upload error:", message);
+    return errorResponse(message, 500);
   }
 }
