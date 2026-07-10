@@ -50,3 +50,4 @@ export function CategoryNav({ categories }: { categories: Category[] }) {
       </div>
     </section>
   );
+}

@@ -1,10 +1,12 @@
 import { getIronSession, SessionOptions } from "iron-session";
 import { cookies } from "next/headers";
+import { prisma } from "@/lib/prisma";
 
 export interface SessionData {
   userId?: string;
   username?: string;
   isLoggedIn: boolean;
+  sessionToken?: string;
 }
 
 export const sessionOptions: SessionOptions = {
@@ -34,11 +36,19 @@ export async function getSession() {
 
 export async function getCurrentUser() {
   const session = await getSession();
-  if (!session.isLoggedIn || !session.userId) {
+  if (!session.isLoggedIn || !session.userId || !session.sessionToken) {
+    return null;
+  }
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId },
+    select: { id: true, username: true, sessionToken: true },
+  });
+  // 会话 token 与数据库不一致（被新登录挤掉或已登出）→ 视为无效
+  if (!user || user.sessionToken !== session.sessionToken) {
     return null;
   }
   return {
-    id: session.userId,
-    username: session.username || "",
+    id: user.id,
+    username: user.username,
   };
 }

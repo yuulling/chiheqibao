@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { randomUUID } from "crypto";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
@@ -53,9 +54,17 @@ export async function POST(request: NextRequest) {
     // Successful login — clear attempts
     loginAttempts.delete(attemptKey);
 
+    // 生成唯一会话 token（实现单管理员登录：新登录会使旧会话失效）
+    const sessionToken = randomUUID();
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { sessionToken },
+    });
+
     const session = await getSession();
     session.userId = user.id;
     session.username = user.username;
+    session.sessionToken = sessionToken;
     session.isLoggedIn = true;
     await session.save();
 
