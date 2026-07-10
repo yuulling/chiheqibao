@@ -38,7 +38,6 @@ export function Footer() {
             <h4 className="text-white font-semibold text-lg mb-4">联系方式</h4>
             <ul className="space-y-2 text-sm">
               <li>电话：{settings.companyPhone || "请致电咨询"}</li>
-              <li>邮箱：{settings.companyEmail || "请邮件联系"}</li>
               <li>地址：{settings.companyAddress || "欢迎来访"}</li>
             </ul>
           </div>

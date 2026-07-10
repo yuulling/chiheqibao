@@ -13,7 +13,6 @@ export function SettingsForm({ settings }: { settings: Settings }) {
     companyName: settings.companyName || "",
     companyAddress: settings.companyAddress || "",
     companyPhone: settings.companyPhone || "",
-    companyEmail: settings.companyEmail || "",
     homeBannerTitle: settings.homeBannerTitle || "",
     homeBannerSubtitle: settings.homeBannerSubtitle || "",
     aboutContent: settings.aboutContent || "",
@@ -63,12 +62,6 @@ export function SettingsForm({ settings }: { settings: Settings }) {
           label="联系电话"
           value={form.companyPhone}
           onChange={(e) => setForm({ ...form, companyPhone: e.target.value })}
-        />
-        <Input
-          label="联系邮箱"
-          type="email"
-          value={form.companyEmail}
-          onChange={(e) => setForm({ ...form, companyEmail: e.target.value })}
         />
 
         <h3 className="font-semibold text-gray-900 text-lg pt-4 mb-2">首页设置</h3>

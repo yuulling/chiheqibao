@@ -38,7 +38,7 @@ export const changePasswordSchema = z.object({
 });
 
 export const settingsKeys = [
-  "companyName", "companyAddress", "companyPhone", "companyEmail",
+  "companyName", "companyAddress", "companyPhone",
   "homeBannerTitle", "homeBannerSubtitle", "aboutContent",
   "footerText", "icpNumber", "siteName", "siteDescription",
 ] as const;
