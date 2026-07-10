@@ -35,7 +35,8 @@ export function SettingsForm({ settings }: { settings: Settings }) {
       if (res.ok) {
         alert("设置已保存");
       } else {
-        alert("保存失败");
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "保存失败");
       }
     } catch {
       alert("保存失败");

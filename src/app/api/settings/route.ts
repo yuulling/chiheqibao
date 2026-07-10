@@ -43,7 +43,8 @@ export async function PUT(request: NextRequest) {
     }
 
     return jsonResponse({ success: true });
-  } catch {
+  } catch (error) {
+    console.error("Settings update error:", error);
     return errorResponse("更新设置失败", 500);
   }
 }
