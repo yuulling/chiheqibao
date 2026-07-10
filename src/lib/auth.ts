@@ -15,6 +15,8 @@ export const sessionOptions: SessionOptions = {
     httpOnly: true,
     sameSite: "lax" as const,
     maxAge: 60 * 60 * 24 * 7, // 7 days
+    // 生产环境让 cookie 在 www 和非 www 域名下都生效，避免重定向后丢失登录态
+    ...(process.env.NODE_ENV === "production" ? { domain: ".chiheqb.top" } : {}),
   },
 };
 
