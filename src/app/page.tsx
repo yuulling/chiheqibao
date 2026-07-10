@@ -3,6 +3,8 @@ import { HeroBanner } from "@/components/home/HeroBanner";
 import { CategoryNav } from "@/components/home/CategoryNav";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 
+export const revalidate = 0; // 禁止缓存，每次请求拉最新数据
+
 export default async function HomePage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let categories: any[] = [];
