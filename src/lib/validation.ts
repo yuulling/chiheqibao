@@ -43,6 +43,11 @@ export const settingsKeys = [
   "footerText", "icpNumber", "siteName", "siteDescription",
 ] as const;
 
+export const batchActionSchema = z.object({
+  action: z.enum(["delete", "publish", "unpublish"]),
+  ids: z.array(z.string()).min(1, "至少选择一个产品"),
+});
+
 export type ProductCreateInput = z.infer<typeof productCreateSchema>;
 export type ProductUpdateInput = z.infer<typeof productUpdateSchema>;
 export type CategoryInput = z.infer<typeof categorySchema>;

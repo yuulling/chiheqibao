@@ -13,15 +13,34 @@ interface Product {
 
 interface ProductTableProps {
   products: Product[];
+  selectedIds: Set<string>;
+  onToggleSelect: (id: string) => void;
+  onToggleSelectAll: () => void;
   onDelete: (id: string) => void;
 }
 
-export function ProductTable({ products, onDelete }: ProductTableProps) {
+export function ProductTable({
+  products,
+  selectedIds,
+  onToggleSelect,
+  onToggleSelectAll,
+  onDelete,
+}: ProductTableProps) {
+  const allSelected = products.length > 0 && products.every((p) => selectedIds.has(p.id));
+
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-sm min-w-[600px]">
+      <table className="w-full text-sm min-w-[640px]">
         <thead>
           <tr className="border-b border-gray-200">
+            <th className="w-10 py-3 px-2">
+              <input
+                type="checkbox"
+                checked={allSelected}
+                onChange={onToggleSelectAll}
+                className="rounded border-gray-300"
+              />
+            </th>
             <th className="text-left py-3 px-4 font-medium text-gray-500">产品名称</th>
             <th className="text-left py-3 px-4 font-medium text-gray-500">分类</th>
             <th className="text-right py-3 px-4 font-medium text-gray-500">价格</th>
@@ -32,6 +51,14 @@ export function ProductTable({ products, onDelete }: ProductTableProps) {
         <tbody>
           {products.map((product) => (
             <tr key={product.id} className="border-b border-gray-100 hover:bg-gray-50">
+              <td className="py-3 px-2">
+                <input
+                  type="checkbox"
+                  checked={selectedIds.has(product.id)}
+                  onChange={() => onToggleSelect(product.id)}
+                  className="rounded border-gray-300"
+                />
+              </td>
               <td className="py-3 px-4">
                 <div className="font-medium text-gray-900">{product.name}</div>
               </td>
@@ -39,7 +66,7 @@ export function ProductTable({ products, onDelete }: ProductTableProps) {
                 {product.category?.name || "-"}
               </td>
               <td className="py-3 px-4 text-right">
-                {product.price ? (
+                {product.price != null && product.price !== undefined ? (
                   <span className="font-medium text-accent-500">
                     ¥{product.price.toLocaleString()} / {product.unit}
                   </span>
@@ -86,7 +113,7 @@ export function ProductTable({ products, onDelete }: ProductTableProps) {
           ))}
           {products.length === 0 && (
             <tr>
-              <td colSpan={5} className="py-12 text-center text-gray-400">
+              <td colSpan={6} className="py-12 text-center text-gray-400">
                 暂无产品
               </td>
             </tr>
